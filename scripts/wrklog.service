@@ -1,0 +1,17 @@
+[Unit]
+Description=wrklog bot service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/wrklog
+EnvironmentFile=/usr/local/etc/wrklog/env
+# Относительный DB_PATH резолвится от /var/lib/wrklog
+StateDirectory=wrklog
+WorkingDirectory=/var/lib/wrklog
+Restart=on-failure
+SyslogIdentifier=wrklog
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

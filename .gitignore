@@ -1,0 +1,4 @@
+/target
+wrklog.db
+.env
+cfgy.yaml

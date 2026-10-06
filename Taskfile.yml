@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  build.release:
+    desc: Сборка релизной версии
+    cmd: cargo build --release
+
+  env:
+    desc: Сгенерировать .env через cfgy (запускать не от root; затем установите сервис)
+    cmd: cfgy env -o .env
+
+  run:
+    desc: Запуск (cargo run)
+    dotenv: [.env]
+    cmd: cargo run
+
+  install-linux:
+    desc: Установка как systemd-сервиса (cfgy → /tmp, затем sudo скрипт)
+    deps: [build.release]
+    preconditions:
+      - test -f scripts/install-linux.sh
+      - test -f scripts/wrklog.service
+    cmds:
+      - cfgy env -o /tmp/wrklog-install.env
+      - sudo ./scripts/install-linux.sh
+
+  install-freebsd:
+    desc: Установка как rc.d-сервиса (cfgy → /tmp, затем doas скрипт)
+    deps: [build.release]
+    preconditions:
+      - test -f scripts/install-freebsd.sh
+      - test -f scripts/wrklog
+    cmds:
+      - cfgy env -o /tmp/wrklog-install.env
+      - doas ./scripts/install-freebsd.sh

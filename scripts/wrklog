@@ -1,0 +1,31 @@
+#!/bin/sh
+# rc.d-скрипт для сервиса wrklog (FreeBSD).
+# PROVIDE: wrklog
+# REQUIRE: NETWORK
+# KEYWORD: nojail
+
+. /etc/rc.subr
+
+name="wrklog"
+rcvar="${name}_enable"
+command="/usr/sbin/daemon"
+command_args="-f -S -T ${name} /usr/local/bin/${name}"
+procname="/usr/local/bin/${name}"
+env_file="/usr/local/etc/${name}.env"
+
+load_rc_config "$name"
+
+# Относительный DB_PATH резолвится от этой директории
+: ${wrklog_chdir:="/var/db/${name}"}
+
+start_precmd="${name}_prestart"
+wrklog_prestart() {
+    mkdir -p "$wrklog_chdir"
+    if [ -f "$env_file" ]; then
+        set -a
+        . "$env_file"
+        set +a
+    fi
+}
+
+run_rc_command "$1"
