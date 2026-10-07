@@ -39,7 +39,7 @@ async fn main() -> anyhow::Result<()> {
     let bot = Bot::from_env();
     bot.set_my_commands(Command::bot_commands()).await?;
 
-    info!(db = %cfg.db_path, "bot started");
+    info!(db = %cfg.db_path, work_start = cfg.work_start, work_end = cfg.work_end, "bot started");
     tokio::spawn(scheduler::run(bot.clone(), cfg.clone(), store.clone()));
 
     let handler = dptree::entry()
