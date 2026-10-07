@@ -23,7 +23,7 @@ tasks:
       - test -f scripts/install-linux.sh
       - test -f scripts/wrklog.service
     cmds:
-      - cfgy env -o /tmp/wrklog-install.env
+      - sh -c 'umask 077; cfgy env -o /tmp/wrklog-install.env'
       - sudo ./scripts/install-linux.sh
 
   install-freebsd:
@@ -33,5 +33,5 @@ tasks:
       - test -f scripts/install-freebsd.sh
       - test -f scripts/wrklog
     cmds:
-      - cfgy env -o /tmp/wrklog-install.env
+      - sh -c 'umask 077; cfgy env -o /tmp/wrklog-install.env'
       - doas ./scripts/install-freebsd.sh
