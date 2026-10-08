@@ -30,7 +30,7 @@ pub async fn run(bot: Bot, cfg: Config, store: Arc<Store>) {
 }
 
 pub fn describe(cfg: &Config) -> String {
-    let hours = (cfg.work_start..cfg.work_end)
+    let hours = (cfg.work_start..=cfg.work_end)
         .step_by(cfg.interval_hours as usize)
         .map(|h| format!("{h:02}:00"))
         .collect::<Vec<_>>();
@@ -56,6 +56,6 @@ fn should_prompt<Tz: TimeZone>(now: DateTime<Tz>, cfg: &Config) -> bool {
     let hour = now.hour();
     weekday
         && now.minute() == 0
-        && (cfg.work_start..cfg.work_end).contains(&hour)
+        && (cfg.work_start..=cfg.work_end).contains(&hour)
         && (hour - cfg.work_start).is_multiple_of(cfg.interval_hours)
 }
